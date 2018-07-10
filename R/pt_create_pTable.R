@@ -75,7 +75,9 @@ pt_create_pTable <-function(params, type, monitoring=FALSE){
 
   {
 
-    cat("\nRow", i, ": original frequency i =",i-1,"\n------------------------------- \n")
+    if (monitoring) {
+      cat("\nRow", i, ": original frequency i =",i-1,"\n------------------------------- \n")
+    }
 
     # Define Vector with possible target frequencies
     j<-seq(max(i-1-D,0),i-1+D,by=1)
@@ -151,9 +153,11 @@ pt_create_pTable <-function(params, type, monitoring=FALSE){
 
     test <- rbind(v=v_current, p_init=p_init, p_lb=p_lb, p_new=p_new)
     colnames(test) <- j
-    print(test)
-    cat("\n")
-
+    
+    if (monitoring) {
+      print(test)
+      cat("\n")
+    }
   }
 
 
@@ -162,13 +166,14 @@ pt_create_pTable <-function(params, type, monitoring=FALSE){
   # Output Check: Constraints (1) Mean, (2) Variance and (5) sum of probabilities
   check <- cbind(fifi_check(P=Matrix, D=D, ncat=ncat), iter=as.integer(ITER))
 
-  cat("\nPerturbation probabilities: \n---------------------------\n\n")
-  print(round(Matrix,3))
-  cat("\n")
-  cat("Check of constraints (1), (2) and (5) plus further checks: \n----------------------------------------------------------\n\n")
-  print(check)
-  cat("\n")
-
+  if (monitoring) {
+    cat("\nPerturbation probabilities: \n---------------------------\n\n")
+    print(round(Matrix,3))
+    cat("\n")
+    cat("Check of constraints (1), (2) and (5) plus further checks: \n----------------------------------------------------------\n\n")
+    print(check)
+    cat("\n")
+  }
 
   Matrix[Matrix < 1.0e-7] <- 0
   DF <- fifi_df(probMat=Matrix, D=D, szenario=label, blocking=blocking, ncat=ncat)
